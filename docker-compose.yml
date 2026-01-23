@@ -1,0 +1,30 @@
+services:
+  signal-api:
+    image: bbernhard/signal-cli-rest-api
+    expose:
+      - "8080"
+    volumes:
+      - signal-data:/home/.local/share/signal-cli
+    environment:
+      - MODE=json-rpc
+    restart: unless-stopped
+
+  bot:
+    build: .
+    depends_on:
+      - signal-api
+    environment:
+      - PHONE_NUMBER=${PHONE_NUMBER}
+      - SIGNAL_SERVICE=signal-api:8080
+      - ALLOWED_GROUPS=${ALLOWED_GROUPS:-}
+      - REDIS_URI=${REDIS_URI}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    restart: unless-stopped
+
+volumes:
+  signal-data:
+
+networks:
+  default:
+    name: dokploy-network
+    external: true
