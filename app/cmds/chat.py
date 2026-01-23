@@ -60,7 +60,7 @@ class ChatCommand(FilteredCommand):
         else:
             return
 
-        # !grye is a direct query, no quote needed
+        # !grye is a direct query
         if mode == "grye":
             query = text[5:].strip()  # Remove "!grye" prefix
             if not query:
@@ -69,7 +69,11 @@ class ChatCommand(FilteredCommand):
             if len(query.split()) > 20:
                 await context.send("máximo 20 palabras")
                 return
-            conversation = query
+            # If replying to someone, include quote as context
+            if context.message.quote:
+                conversation = f"{context.message.quote.text}\n\n{query}"
+            else:
+                conversation = query
         else:
             # Must be a reply to another message
             if not context.message.quote:

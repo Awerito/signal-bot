@@ -19,6 +19,7 @@ services:
       - ALLOWED_GROUPS=${ALLOWED_GROUPS:-}
       - REDIS_URI=${REDIS_URI}
       - GROQ_API_KEY=${GROQ_API_KEY}
+      - PROMPT_KEY=${PROMPT_KEY}
     restart: unless-stopped
 
 volumes:
